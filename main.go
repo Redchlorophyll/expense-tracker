@@ -11,6 +11,7 @@ func main() {
 	httpService := mainConfig.InitializeService(serv)
 
 	httpService.UserHandler.SetRoute(app)
+	httpService.TransactionHandler.SetRoute(app)
 
 	app.Listen(":8080")
 }
