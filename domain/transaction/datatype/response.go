@@ -26,13 +26,13 @@ type TransactionDataResponse struct {
 }
 
 type TransactionItemDataResponse struct {
-	Amount int    `json:"amount"`
-	Type   string `json:"type"`
-	Note   string `json:"note"`
+	Amount int    `db:"amount" json:"amount"`
+	Type   string `db:"type" json:"type"`
+	Note   string `db:"note" json:"note"`
 }
 
 type TransactionSummaryDataResponse struct {
-	Expanse int `json:"Expanse"`
-	Income  int `json:"Income"`
-	Balance int `json:"Balance"`
+	Expanse int `db:"total_expenses" json:"Expanse"`
+	Income  int `db:"total_income" json:"Income"`
+	Balance int `db:"balance" json:"Balance"`
 }

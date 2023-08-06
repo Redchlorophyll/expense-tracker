@@ -7,11 +7,11 @@ import (
 )
 
 type TransactionServiceProvider interface {
-	CreateTransactions(context context.Context) (transactionDatatype.GeneralResponse, error)
+	CreateTransactions(context context.Context, req transactionDatatype.PostTransactionRequest) (transactionDatatype.GeneralResponse, error)
 
 	GetTransactions(context context.Context) (transactionDatatype.GetTransactionListResponse, error)
 
-	DeleteTransactions(context context.Context) (transactionDatatype.GeneralResponse, error)
+	DeleteTransactions(context context.Context, req []transactionDatatype.DeleteTransactionDataRequest) (transactionDatatype.GeneralResponse, error)
 
 	GetTransactionSummary(context context.Context) (transactionDatatype.GetTransactionSummaryResponse, error)
 }

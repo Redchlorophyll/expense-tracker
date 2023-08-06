@@ -14,6 +14,17 @@ type PostTransactionDataRequest struct {
 	Note   string `json:"note"`
 }
 
+type UpdateSummaryRequest struct {
+	TotalExpenses int
+	TotalIncome   int
+	Balance       int
+	Id            int
+}
+
 type DeleteTransactionDataRequest struct {
+	Id int `json:"id"`
+}
+
+type GetTransactionListRequest struct {
 	Id int `json:"id"`
 }

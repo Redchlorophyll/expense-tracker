@@ -23,7 +23,7 @@ func (transaction *TransactionHandler) CreateTransactionsHandler(fiberCtx *fiber
 		})
 	}
 
-	result, err := transaction.TransactionService.CreateTransactions(fiberCtx.Context())
+	result, err := transaction.TransactionService.CreateTransactions(fiberCtx.Context(), request)
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusInternalServerError).JSON(transactionDatatype.GeneralResponse{
@@ -60,7 +60,7 @@ func (transaction *TransactionHandler) DeleteTransactionsHandler(fiberCtx *fiber
 		})
 	}
 
-	result, err := transaction.TransactionService.DeleteTransactions(fiberCtx.Context())
+	result, err := transaction.TransactionService.DeleteTransactions(fiberCtx.Context(), request.Transactions)
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusInternalServerError).JSON(transactionDatatype.GeneralResponse{
