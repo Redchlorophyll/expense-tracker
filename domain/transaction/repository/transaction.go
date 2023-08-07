@@ -27,6 +27,7 @@ func (transaction transactionRepo) GetTransactions(context context.Context, req 
 
 	query := `
 		SELECT
+			id,
 			amount,
 			type,
 			notes
@@ -48,7 +49,7 @@ func (transaction transactionRepo) GetTransactions(context context.Context, req 
 	for rows.Next() {
 		var item transactionDatatype.TransactionItemDataResponse
 
-		err := rows.Scan(&item.Amount, &item.Type, &item.Note)
+		err := rows.Scan(&item.Id, &item.Amount, &item.Type, &item.Note)
 		if err != nil {
 			panic(err)
 		}

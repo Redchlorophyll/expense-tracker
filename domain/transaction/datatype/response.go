@@ -26,6 +26,7 @@ type TransactionDataResponse struct {
 }
 
 type TransactionItemDataResponse struct {
+	Id     int    `db:"id" json:"id"`
 	Amount int    `db:"amount" json:"amount"`
 	Type   string `db:"type" json:"type"`
 	Note   string `db:"note" json:"note"`
