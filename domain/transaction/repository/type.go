@@ -17,5 +17,5 @@ type TransactionRepositoryProvider interface {
 
 	GetTransactionsById(context context.Context, userId int, req int) (transactionDatatype.TransactionItemDataResponse, error)
 
-	DeleteTransactionFromId(context context.Context, id int) error
+	DeleteTransactionFromId(context context.Context, id int, userId int) error
 }

@@ -1,6 +1,8 @@
 package httpservice
 
 import (
+	"strconv"
+
 	transactionDatatype "github.com/Redchlorophyll/expense-tracker/domain/transaction/datatype"
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,9 +14,18 @@ func NewHandler(cfg TransactionHandlerConfig) *TransactionHandler {
 }
 
 func (transaction *TransactionHandler) CreateTransactionsHandler(fiberCtx *fiber.Ctx) error {
+	userId, err := strconv.ParseInt(fiberCtx.Cookies("token"), 10, 64)
+
+	if err != nil {
+		return fiberCtx.Status(fiber.StatusBadRequest).JSON(transactionDatatype.GeneralResponse{
+			StatusCode: 403,
+			Message:    "Forbidden access!",
+		})
+	}
+
 	var request transactionDatatype.PostTransactionRequest
 
-	err := fiberCtx.BodyParser(&request)
+	err = fiberCtx.BodyParser(&request)
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusBadRequest).JSON(transactionDatatype.GeneralResponse{
@@ -23,7 +34,7 @@ func (transaction *TransactionHandler) CreateTransactionsHandler(fiberCtx *fiber
 		})
 	}
 
-	result, err := transaction.TransactionService.CreateTransactions(fiberCtx.Context(), request)
+	result, err := transaction.TransactionService.CreateTransactions(fiberCtx.Context(), request, int(userId))
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusInternalServerError).JSON(transactionDatatype.GeneralResponse{
@@ -36,7 +47,16 @@ func (transaction *TransactionHandler) CreateTransactionsHandler(fiberCtx *fiber
 }
 
 func (transaction *TransactionHandler) GetTransactionsHandler(fiberCtx *fiber.Ctx) error {
-	result, err := transaction.TransactionService.GetTransactions(fiberCtx.Context())
+	userId, err := strconv.ParseInt(fiberCtx.Cookies("token"), 10, 64)
+
+	if err != nil {
+		return fiberCtx.Status(fiber.StatusBadRequest).JSON(transactionDatatype.GeneralResponse{
+			StatusCode: 403,
+			Message:    "Forbidden access!",
+		})
+	}
+
+	result, err := transaction.TransactionService.GetTransactions(fiberCtx.Context(), int(userId))
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusInternalServerError).JSON(transactionDatatype.GeneralResponse{
@@ -49,9 +69,18 @@ func (transaction *TransactionHandler) GetTransactionsHandler(fiberCtx *fiber.Ct
 }
 
 func (transaction *TransactionHandler) DeleteTransactionsHandler(fiberCtx *fiber.Ctx) error {
+	userId, err := strconv.ParseInt(fiberCtx.Cookies("token"), 10, 64)
+
+	if err != nil {
+		return fiberCtx.Status(fiber.StatusBadRequest).JSON(transactionDatatype.GeneralResponse{
+			StatusCode: 403,
+			Message:    "Forbidden access!",
+		})
+	}
+
 	var request transactionDatatype.DeleteTransactionRequest
 
-	err := fiberCtx.BodyParser(&request)
+	err = fiberCtx.BodyParser(&request)
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusBadRequest).JSON(transactionDatatype.GeneralResponse{
@@ -60,7 +89,7 @@ func (transaction *TransactionHandler) DeleteTransactionsHandler(fiberCtx *fiber
 		})
 	}
 
-	result, err := transaction.TransactionService.DeleteTransactions(fiberCtx.Context(), request.Transactions)
+	result, err := transaction.TransactionService.DeleteTransactions(fiberCtx.Context(), request.Transactions, int(userId))
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusInternalServerError).JSON(transactionDatatype.GeneralResponse{
@@ -73,7 +102,16 @@ func (transaction *TransactionHandler) DeleteTransactionsHandler(fiberCtx *fiber
 }
 
 func (transaction *TransactionHandler) GetTransactionSummaryHandler(fiberCtx *fiber.Ctx) error {
-	result, err := transaction.TransactionService.GetTransactionSummary(fiberCtx.Context())
+	userId, err := strconv.ParseInt(fiberCtx.Cookies("token"), 10, 64)
+
+	if err != nil {
+		return fiberCtx.Status(fiber.StatusBadRequest).JSON(transactionDatatype.GeneralResponse{
+			StatusCode: 403,
+			Message:    "Forbidden access!",
+		})
+	}
+
+	result, err := transaction.TransactionService.GetTransactionSummary(fiberCtx.Context(), int(userId))
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusInternalServerError).JSON(transactionDatatype.GeneralResponse{

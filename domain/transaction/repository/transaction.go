@@ -131,7 +131,7 @@ func (transaction transactionRepo) GetSummaryTransaction(context context.Context
 }
 
 func (transaction transactionRepo) PostTransactions(context context.Context, req transactionDatatype.PostTransactionDataRequest, id int) error {
-	if req.Amount == 0 || (req.Type != "amount" && req.Type != "expense") {
+	if req.Amount == 0 || (req.Type != "income" && req.Type != "expense") {
 		return errors.New("invalid request")
 	}
 
@@ -181,7 +181,7 @@ func (transaction transactionRepo) UpdateSummary(context context.Context, req tr
 	return nil
 }
 
-func (transaction transactionRepo) DeleteTransactionFromId(context context.Context, id int) error {
+func (transaction transactionRepo) DeleteTransactionFromId(context context.Context, id int, userId int) error {
 	query := `
 		UPDATE
 			financial_records
@@ -189,9 +189,10 @@ func (transaction transactionRepo) DeleteTransactionFromId(context context.Conte
 			deleted_at = NOW()
 		WHERE
 			id = $1
+			AND user_id = $2
 			AND deleted_at IS NULL
 	`
-	result, err := transaction.db.ExecContext(context, query, id)
+	result, err := transaction.db.ExecContext(context, query, id, userId)
 
 	if err != nil {
 		return err

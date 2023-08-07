@@ -8,5 +8,5 @@ func (userHandler *UserServiceHandler) SetRoute(app *fiber.App) {
 	group := app.Group("/api/v1/user")
 
 	group.Post("/signup", userHandler.CreateUserHandler)
-	group.Post("/login", userHandler.LoginHandler)
+	group.Get("/login", userHandler.LoginHandler)
 }

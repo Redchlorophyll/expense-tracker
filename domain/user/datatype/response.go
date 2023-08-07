@@ -17,5 +17,5 @@ type UserLoginResponse struct {
 }
 
 type GenerateTokenDataResponse struct {
-	Token string `json:"token"`
+	Token int `json:"token"`
 }

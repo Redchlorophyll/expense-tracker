@@ -7,7 +7,7 @@ import (
 )
 
 type UserServiceProvider interface {
-	CreateUser(context context.Context) (userDatatype.GenerateTokenResponse, error)
+	CreateUser(context context.Context, request userDatatype.UserRequest) (userDatatype.GenerateTokenResponse, error)
 
-	GenerateUserToken(context context.Context) (userDatatype.GenerateTokenResponse, error)
+	GetUser(context context.Context, request userDatatype.UserRequest) (userDatatype.GenerateTokenResponse, error)
 }

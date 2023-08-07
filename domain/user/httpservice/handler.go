@@ -23,7 +23,7 @@ func (user *UserServiceHandler) CreateUserHandler(fiberCtx *fiber.Ctx) error {
 		})
 	}
 
-	result, err := user.userService.CreateUser(fiberCtx.Context())
+	result, err := user.userService.CreateUser(fiberCtx.Context(), request)
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusInternalServerError).JSON(userDatatype.GeneralResponse{
@@ -47,7 +47,7 @@ func (user *UserServiceHandler) LoginHandler(fiberCtx *fiber.Ctx) error {
 		})
 	}
 
-	result, err := user.userService.GenerateUserToken(fiberCtx.Context())
+	result, err := user.userService.GetUser(fiberCtx.Context(), request)
 
 	if err != nil {
 		return fiberCtx.Status(fiber.StatusInternalServerError).JSON(userDatatype.GeneralResponse{

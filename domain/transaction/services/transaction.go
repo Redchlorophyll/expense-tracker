@@ -3,28 +3,41 @@ package services
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	transactionDatatype "github.com/Redchlorophyll/expense-tracker/domain/transaction/datatype"
 	"github.com/Redchlorophyll/expense-tracker/domain/transaction/repository"
+	userDatatype "github.com/Redchlorophyll/expense-tracker/domain/user/datatype"
+	userRepo "github.com/Redchlorophyll/expense-tracker/domain/user/repository"
 )
 
 type transactionService struct {
 	TransactionRepository repository.TransactionRepositoryProvider
+	UserRepository        userRepo.UserRepositoryProvider
 }
 
 type TransactionServiceConfig struct {
 	TransactionRepository repository.TransactionRepositoryProvider
+	UserRepository        userRepo.UserRepositoryProvider
 }
 
 func NewTransactionService(cfg TransactionServiceConfig) TransactionServiceProvider {
 	return &transactionService{
 		TransactionRepository: cfg.TransactionRepository,
+		UserRepository:        cfg.UserRepository,
 	}
 }
 
-func (c *transactionService) CreateTransactions(context context.Context, req transactionDatatype.PostTransactionRequest) (transactionDatatype.GeneralResponse, error) {
-	summary, err := c.TransactionRepository.GetSummaryTransaction(context, 1)
+func (c *transactionService) CreateTransactions(context context.Context, req transactionDatatype.PostTransactionRequest, userId int) (transactionDatatype.GeneralResponse, error) {
+	_, err := c.getUserById(context, userId)
+
+	if err != nil {
+		return transactionDatatype.GeneralResponse{
+			StatusCode: 403,
+			Message:    "Forbidden access!",
+		}, err
+	}
+
+	summary, err := c.TransactionRepository.GetSummaryTransaction(context, userId)
 	var partialErr error
 	var updateCounter int
 
@@ -36,11 +49,11 @@ func (c *transactionService) CreateTransactions(context context.Context, req tra
 		TotalExpenses: summary.Expanse,
 		TotalIncome:   summary.Income,
 		Balance:       summary.Balance,
-		Id:            1,
+		Id:            userId,
 	}
 
 	for _, data := range req.Transactions {
-		err := c.TransactionRepository.PostTransactions(context, data, 1)
+		err := c.TransactionRepository.PostTransactions(context, data, userId)
 
 		if err != nil {
 			// will only break this to handle partial success
@@ -59,8 +72,6 @@ func (c *transactionService) CreateTransactions(context context.Context, req tra
 
 		updateCounter += 1
 	}
-
-	fmt.Println(summary, summaryDetail)
 
 	err = c.TransactionRepository.UpdateSummary(context, summaryDetail)
 
@@ -88,8 +99,17 @@ func (c *transactionService) CreateTransactions(context context.Context, req tra
 	}, nil
 }
 
-func (c *transactionService) GetTransactions(context context.Context) (transactionDatatype.GetTransactionListResponse, error) {
-	result, err := c.TransactionRepository.GetTransactions(context, 1)
+func (c *transactionService) GetTransactions(context context.Context, userId int) (transactionDatatype.GetTransactionListResponse, error) {
+	_, err := c.getUserById(context, userId)
+
+	if err != nil {
+		return transactionDatatype.GetTransactionListResponse{
+			StatusCode: 403,
+			Message:    "Forbidden access!",
+		}, err
+	}
+
+	result, err := c.TransactionRepository.GetTransactions(context, userId)
 
 	if err != nil {
 		return transactionDatatype.GetTransactionListResponse{}, err
@@ -104,8 +124,17 @@ func (c *transactionService) GetTransactions(context context.Context) (transacti
 	}, nil
 }
 
-func (c *transactionService) DeleteTransactions(context context.Context, req []transactionDatatype.DeleteTransactionDataRequest) (transactionDatatype.GeneralResponse, error) {
-	summary, err := c.TransactionRepository.GetSummaryTransaction(context, 1)
+func (c *transactionService) DeleteTransactions(context context.Context, req []transactionDatatype.DeleteTransactionDataRequest, userId int) (transactionDatatype.GeneralResponse, error) {
+	_, err := c.getUserById(context, userId)
+
+	if err != nil {
+		return transactionDatatype.GeneralResponse{
+			StatusCode: 403,
+			Message:    "Forbidden access!",
+		}, err
+	}
+
+	summary, err := c.TransactionRepository.GetSummaryTransaction(context, userId)
 	var partialErr error
 	var updateCounter int
 
@@ -117,18 +146,17 @@ func (c *transactionService) DeleteTransactions(context context.Context, req []t
 		TotalExpenses: summary.Expanse,
 		TotalIncome:   summary.Income,
 		Balance:       summary.Balance,
-		Id:            1,
+		Id:            userId,
 	}
 
 	for _, data := range req {
-		result, err := c.TransactionRepository.GetTransactionsById(context, 1, data.Id)
+		result, err := c.TransactionRepository.GetTransactionsById(context, userId, data.Id)
 
 		if err != nil {
-			fmt.Println(err)
 			return transactionDatatype.GeneralResponse{}, err
 		}
 
-		err = c.TransactionRepository.DeleteTransactionFromId(context, data.Id)
+		err = c.TransactionRepository.DeleteTransactionFromId(context, data.Id, userId)
 
 		if err != nil {
 			partialErr = errors.New("partial error")
@@ -150,7 +178,6 @@ func (c *transactionService) DeleteTransactions(context context.Context, req []t
 	err = c.TransactionRepository.UpdateSummary(context, summaryDetail)
 
 	if err != nil {
-		fmt.Println(err)
 		return transactionDatatype.GeneralResponse{}, err
 	}
 
@@ -174,11 +201,19 @@ func (c *transactionService) DeleteTransactions(context context.Context, req []t
 	}, nil
 }
 
-func (c *transactionService) GetTransactionSummary(context context.Context) (transactionDatatype.GetTransactionSummaryResponse, error) {
-	result, err := c.TransactionRepository.GetSummaryTransaction(context, 1)
+func (c *transactionService) GetTransactionSummary(context context.Context, userId int) (transactionDatatype.GetTransactionSummaryResponse, error) {
+	_, err := c.getUserById(context, userId)
 
 	if err != nil {
-		fmt.Println(err)
+		return transactionDatatype.GetTransactionSummaryResponse{
+			StatusCode: 403,
+			Message:    "Forbidden access!",
+		}, err
+	}
+
+	result, err := c.TransactionRepository.GetSummaryTransaction(context, userId)
+
+	if err != nil {
 		return transactionDatatype.GetTransactionSummaryResponse{}, err
 	}
 
@@ -189,4 +224,13 @@ func (c *transactionService) GetTransactionSummary(context context.Context) (tra
 			Summary: result,
 		},
 	}, nil
+}
+
+func (transaction transactionService) getUserById(context context.Context, userId int) (userDatatype.UserTableEntity, error) {
+	result, err := transaction.UserRepository.GetUserValueById(context, userId)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
 }

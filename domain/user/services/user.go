@@ -4,32 +4,57 @@ import (
 	"context"
 
 	userDatatype "github.com/Redchlorophyll/expense-tracker/domain/user/datatype"
+	"github.com/Redchlorophyll/expense-tracker/domain/user/repository"
 )
 
-type userService struct{}
-
-type UserServiceConfig struct{}
-
-func NewUserService(cfg UserServiceConfig) UserServiceProvider {
-	return &userService{}
+type userService struct {
+	UserRepo repository.UserRepositoryProvider
 }
 
-func (c *userService) CreateUser(context context.Context) (userDatatype.GenerateTokenResponse, error) {
+type UserServiceConfig struct {
+	UserRepo repository.UserRepositoryProvider
+}
+
+func NewUserService(cfg UserServiceConfig) UserServiceProvider {
+	return &userService{
+		UserRepo: cfg.UserRepo,
+	}
+}
+
+func (c *userService) CreateUser(context context.Context, request userDatatype.UserRequest) (userDatatype.GenerateTokenResponse, error) {
+	err := c.UserRepo.CreateUser(context, request)
+
+	if err != nil {
+		return userDatatype.GenerateTokenResponse{}, err
+	}
+
+	result, err := c.UserRepo.GetUserByEmailAndPassword(context, request)
+
+	if err != nil {
+		return userDatatype.GenerateTokenResponse{}, err
+	}
+
 	return userDatatype.GenerateTokenResponse{
 		StatusCode: 200,
 		Message:    "signup succeded!",
 		Data: userDatatype.GenerateTokenDataResponse{
-			Token: "this is should be token",
+			Token: result.Id,
 		},
 	}, nil
 }
 
-func (c *userService) GenerateUserToken(context context.Context) (userDatatype.GenerateTokenResponse, error) {
+func (c *userService) GetUser(context context.Context, request userDatatype.UserRequest) (userDatatype.GenerateTokenResponse, error) {
+	result, err := c.UserRepo.GetUserByEmailAndPassword(context, request)
+
+	if err != nil {
+		return userDatatype.GenerateTokenResponse{}, err
+	}
+
 	return userDatatype.GenerateTokenResponse{
 		StatusCode: 200,
 		Message:    "Login succeded!",
 		Data: userDatatype.GenerateTokenDataResponse{
-			Token: "this is should be token",
+			Token: result.Id,
 		},
 	}, nil
 }
