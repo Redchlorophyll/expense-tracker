@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log"
 
 	userDataType "github.com/Redchlorophyll/expense-tracker/domain/user/datatype"
 )
@@ -101,6 +102,7 @@ func (user UserRepo) CreateUser(context context.Context, req userDataType.UserRe
 	_, err := user.db.ExecContext(context, query, req.Email, req.Password)
 
 	if err != nil {
+		log.Printf("failed: CreateUser: ", err)
 		return err
 	}
 
