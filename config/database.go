@@ -8,7 +8,7 @@ import (
 )
 
 func NewDatabase() *sql.DB {
-	db, err := sql.Open("postgres", "postgres://postgres:postgres@localhost:5432/tracker?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://postgres:expense-tracker1234@db.klwzjwiaupfalozgcpco.supabase.co:5432/postgres?sslmode=disable")
 
 	if err != nil {
 		panic(err)
