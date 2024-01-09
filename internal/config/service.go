@@ -1,10 +1,10 @@
-package config
+package internal
 
 import (
-	transactionRepo "github.com/Redchlorophyll/expense-tracker/domain/transaction/repository"
-	transactionService "github.com/Redchlorophyll/expense-tracker/domain/transaction/services"
-	userRepo "github.com/Redchlorophyll/expense-tracker/domain/user/repository"
-	userService "github.com/Redchlorophyll/expense-tracker/domain/user/services"
+	transactionRepo "github.com/Redchlorophyll/expense-tracker/internal/domain/transaction/repository"
+	transactionService "github.com/Redchlorophyll/expense-tracker/internal/domain/transaction/services"
+	userRepo "github.com/Redchlorophyll/expense-tracker/internal/domain/user/repository"
+	userService "github.com/Redchlorophyll/expense-tracker/internal/domain/user/services"
 )
 
 func GetService() *Service {

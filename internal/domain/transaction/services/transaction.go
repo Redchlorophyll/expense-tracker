@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	transactionDatatype "github.com/Redchlorophyll/expense-tracker/domain/transaction/datatype"
-	"github.com/Redchlorophyll/expense-tracker/domain/transaction/repository"
-	userDatatype "github.com/Redchlorophyll/expense-tracker/domain/user/datatype"
-	userRepo "github.com/Redchlorophyll/expense-tracker/domain/user/repository"
+	transactionDatatype "github.com/Redchlorophyll/expense-tracker/internal/domain/transaction/datatype"
+	"github.com/Redchlorophyll/expense-tracker/internal/domain/transaction/repository"
+	userDatatype "github.com/Redchlorophyll/expense-tracker/internal/domain/user/datatype"
+	userRepo "github.com/Redchlorophyll/expense-tracker/internal/domain/user/repository"
 )
 
 type transactionService struct {

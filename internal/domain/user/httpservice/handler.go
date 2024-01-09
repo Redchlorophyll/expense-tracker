@@ -1,7 +1,7 @@
 package httpservice
 
 import (
-	userDatatype "github.com/Redchlorophyll/expense-tracker/domain/user/datatype"
+	userDatatype "github.com/Redchlorophyll/expense-tracker/internal/domain/user/datatype"
 	"github.com/gofiber/fiber/v2"
 )
 

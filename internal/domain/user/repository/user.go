@@ -6,7 +6,7 @@ import (
 	"errors"
 	"log"
 
-	userDataType "github.com/Redchlorophyll/expense-tracker/domain/user/datatype"
+	userDataType "github.com/Redchlorophyll/expense-tracker/internal/domain/user/datatype"
 )
 
 type UserRepo struct {

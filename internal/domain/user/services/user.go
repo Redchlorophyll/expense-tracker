@@ -3,8 +3,8 @@ package services
 import (
 	"context"
 
-	userDatatype "github.com/Redchlorophyll/expense-tracker/domain/user/datatype"
-	"github.com/Redchlorophyll/expense-tracker/domain/user/repository"
+	userDatatype "github.com/Redchlorophyll/expense-tracker/internal/domain/user/datatype"
+	"github.com/Redchlorophyll/expense-tracker/internal/domain/user/repository"
 )
 
 type userService struct {

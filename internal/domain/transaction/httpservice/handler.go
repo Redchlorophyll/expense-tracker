@@ -3,7 +3,7 @@ package httpservice
 import (
 	"strconv"
 
-	transactionDatatype "github.com/Redchlorophyll/expense-tracker/domain/transaction/datatype"
+	transactionDatatype "github.com/Redchlorophyll/expense-tracker/internal/domain/transaction/datatype"
 	"github.com/gofiber/fiber/v2"
 )
 

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	userDataType "github.com/Redchlorophyll/expense-tracker/domain/user/datatype"
+	userDataType "github.com/Redchlorophyll/expense-tracker/internal/domain/user/datatype"
 )
 
 type UserRepositoryProvider interface {

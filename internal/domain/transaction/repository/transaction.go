@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	transactionDatatype "github.com/Redchlorophyll/expense-tracker/domain/transaction/datatype"
+	transactionDatatype "github.com/Redchlorophyll/expense-tracker/internal/domain/transaction/datatype"
 )
 
 type transactionRepo struct {

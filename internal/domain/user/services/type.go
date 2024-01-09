@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 
-	userDatatype "github.com/Redchlorophyll/expense-tracker/domain/user/datatype"
+	userDatatype "github.com/Redchlorophyll/expense-tracker/internal/domain/user/datatype"
 )
 
 type UserServiceProvider interface {

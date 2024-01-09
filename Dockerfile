@@ -11,7 +11,7 @@ COPY . /app
 RUN go mod download
 
 # Build the application
-RUN go build -o main .
+RUN go build -o build/monolith ./cmd/httpservice/expense_tracker
 
 # Runtime stage
 FROM alpine:latest
@@ -19,11 +19,11 @@ FROM alpine:latest
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy only the built binary from the builder image
-COPY --from=builder /app/main .
+# Copy only the build binary from the builder image
+COPY --from=builder /app/build .
 
 # Expose port 8080
 EXPOSE 8080
 
 # Define the entry point for the container
-CMD ["./main"]
+CMD ["./monolith"]

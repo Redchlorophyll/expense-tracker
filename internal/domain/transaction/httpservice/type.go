@@ -1,6 +1,6 @@
 package httpservice
 
-import "github.com/Redchlorophyll/expense-tracker/domain/transaction/services"
+import "github.com/Redchlorophyll/expense-tracker/internal/domain/transaction/services"
 
 type TransactionHandler struct {
 	TransactionService services.TransactionServiceProvider
